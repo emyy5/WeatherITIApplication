@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/basic_color"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:text="@string/from"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:background="@drawable/rounded_corners"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:text="@string/to"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:background="@drawable/rounded_corners"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/linearAlertFrom"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:weightSum="1"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_corners">
+
+            <TextView
+                android:id="@+id/fromTimeDialog"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:textAlignment="center"
+                android:text="12:00"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="24dp"
+                android:background="@drawable/rounded_corners"/>
+
+            <TextView
+                android:id="@+id/fromDateDialog"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:textAlignment="center"
+                android:text="20 may"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:background="@drawable/rounded_corners"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearAlertTo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:weightSum="1"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_corners">
+
+            <TextView
+                android:id="@+id/toTimeDialog"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:textAlignment="center"
+                android:text="12:00"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="24dp"
+                android:background="@drawable/rounded_corners"/>
+
+            <TextView
+                android:id="@+id/toDateDialog"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:textAlignment="center"
+                android:text="20 may"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:background="@drawable/rounded_corners"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="32dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <RadioButton
+            android:id="@+id/alarmForAlert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:text="@string/alertAlarm"
+            android:textColor="@color/white"
+            android:textSize="17dp" />
+
+        <RadioButton
+            android:id="@+id/notificationForAlert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications"
+            android:textColor="@color/white"
+            android:textSize="17dp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/addAlertBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="60dp"
+        android:background="@drawable/buttons_rounded_corners"
+        app:backgroundTint="@color/color1"
+        android:layout_gravity="center"
+        android:text="@string/save" />
+
+</LinearLayout>

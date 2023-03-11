@@ -14,6 +14,7 @@
     <string name="notifications">Notifications</string>
     <string name="alertNot">Notifications</string>
     <string name="alertAlarm">Alarm</string>
+    <string name="favourite_details">Favourite details</string>
 
     <string name="Celsius">°C</string>
     <string name="Fahrenheit">°F</string>
@@ -52,5 +53,7 @@
     <string name="sorry">Sorry cannot save this alarm! you should enable the notifications</string>
     <string name="networkWarning">please, check your network!</string>
     <string name="mapKey">AIzaSyBtBC-vEWQokUP6yPiNXQOD-LPk2ru10W4</string>
+    <string name="Location_Permission_Needed">Location Permission Needed</string>
+    <string name="This_app_needs_the_Location_permission_please_accept_to_use_location_functionality">This app needs the Location permission, please accept to use location functionality</string>
 
 </resources>

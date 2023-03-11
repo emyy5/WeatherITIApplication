@@ -1,16 +1,19 @@
 package com.eman.weatherproject.features.alert.view
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.work.Data
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -38,10 +41,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class AlertFragment : Fragment() , OnClickAlertInterface {
+class AlertFragment : Fragment(), OnClickAlertInterface {
 
-
-    private lateinit var binding:FragmentAlertBinding
+    private lateinit var binding: FragmentAlertBinding
     private lateinit var navController: NavController
     private lateinit var addAlert: Dialog
     private lateinit var datePickerDialog: Dialog
@@ -54,36 +56,49 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
     private var settings: Settings? = null
     var alertFromDate: Date? = Date()
     var alertToDate: Date? = Date()
-    var notifyType:Boolean = true
+    var notifyType: Boolean = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var datePicker: DatePicker
+    private lateinit var dateOk: Button
+    private lateinit var dateCancel: Button
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private lateinit var timePicker: TimePicker
+    private lateinit var timeOk: Button
+    private lateinit var timeCancel: Button
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_alert, container, false)
     }
 
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAlertBinding.bind(view)
-        navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
         alertViewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
                 RemoteSource.getInstance(),
                 LocalSource.getInstance(requireActivity()),
                 requireContext(),
-                requireContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)))
-        alertViewModel = ViewModelProvider(this,alertViewModelFactory).get(AlertViewModel::class.java)
+                requireContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
+            )
+        )
+        alertViewModel =
+            ViewModelProvider(this, alertViewModelFactory).get(AlertViewModel::class.java)
 
         settings = alertViewModel.getStoredSettings()
 
         setupRecycler()
 
-        alertViewModel.getAllAlertsInVM().observe(viewLifecycleOwner){
-            if(it != null) {
+        alertViewModel.getAllAlertsInVM().observe(viewLifecycleOwner) {
+            if (it != null) {
                 alertAdapter.setAlertsList(it)
             }
             alertAdapter.notifyDataSetChanged()
@@ -93,61 +108,46 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
         addAlert.setContentView(R.layout.alert_dialog)
         addAlert.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        var fromLinear: LinearLayout = addAlert.findViewById(R.id.linearAlertFrom)
-        var fromDatatxt: TextView = addAlert.findViewById(R.id.fromDateDialog)
-        var fromTimetxt: TextView = addAlert.findViewById(R.id.fromTimeDialog)
+        val fromLinear: LinearLayout = addAlert.findViewById(R.id.linearAlertFrom)
+        val fromDatatxt: TextView = addAlert.findViewById(R.id.fromDateDialog)
+        val fromTimetxt: TextView = addAlert.findViewById(R.id.fromTimeDialog)
 
-        var toLinear: LinearLayout = addAlert.findViewById(R.id.linearAlertTo)
-        var toDatatxt: TextView = addAlert.findViewById(R.id.toDateDialog)
-        var toTimetxt: TextView = addAlert.findViewById(R.id.toTimeDialog)
+        val toLinear: LinearLayout = addAlert.findViewById(R.id.linearAlertTo)
+        val toDatatxt: TextView = addAlert.findViewById(R.id.toDateDialog)
+        val toTimetxt: TextView = addAlert.findViewById(R.id.toTimeDialog)
 
-        var saveBtn: Button = addAlert.findViewById(R.id.addAlertBtn)
-        var notification: RadioButton = addAlert.findViewById(R.id.notificationForAlert)
-        var alarm: RadioButton = addAlert.findViewById(R.id.alarmForAlert)
+        val saveBtn: Button = addAlert.findViewById(R.id.addAlertBtn)
+        val notification: RadioButton = addAlert.findViewById(R.id.notificationForAlert)
+        val alarm: RadioButton = addAlert.findViewById(R.id.alarmForAlert)
 
         notification.isChecked = true
 
-        notification.setOnClickListener{ notifyType = true }
+        notification.setOnClickListener { notifyType = true }
 
-        alarm.setOnClickListener{notifyType = false}
+        alarm.setOnClickListener { notifyType = false }
 
-        binding.floatingAddAlert.setOnClickListener{
+        binding.floatingAddAlert.setOnClickListener {
             addAlert.show()
-            fromLinear.setOnClickListener{
+            fromLinear.setOnClickListener {
 
-                datePickerDialog = Dialog(requireContext())
-                datePickerDialog.setContentView(R.layout.time_picker)
-                datePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-                var datePicker: DatePicker = datePickerDialog.findViewById(R.id.datePicker)
-                var dateOk: Button = datePickerDialog.findViewById(R.id.dateOk)
-                var dateCancel: Button = datePickerDialog.findViewById(R.id.dateCancel)
-
-                datePickerDialog.show()
+                setUpDatePicker()
 
                 dateOk.setOnClickListener {
-                    var fDay = datePicker.dayOfMonth
-                    var fMonth = datePicker.month
-                    var fYear = datePicker.year
+                    val fDay = datePicker.dayOfMonth
+                    val fMonth = datePicker.month
+                    val fYear = datePicker.year
 
-                    timePickerDialog = Dialog(requireContext())
-                    timePickerDialog.setContentView(R.layout.time_picker)
-                    timePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                    var timePicker: TimePicker = timePickerDialog.findViewById(R.id.timePicker)
-                    var timeOk: Button = timePickerDialog.findViewById(R.id.timeOk)
-                    var timeCancel: Button = timePickerDialog.findViewById(R.id.timeCancel)
-
-                    timePickerDialog.show()
+                    setUpTimePicker()
 
                     timeOk.setOnClickListener {
-                        var fHour = timePicker.hour
-                        var fMinute = timePicker.minute
+                        val fHour = timePicker.hour
+                        val fMinute = timePicker.minute
 
-                        fromDatatxt.text = Converters.getDateFromInt(fDay,fMonth,fYear)
+                        fromDatatxt.text = Converters.getDateFromInt(fDay, fMonth, fYear)
                         fromTimetxt.text = "$fHour:$fMinute"
 
-                        alertFromDate = Date(fYear,fMonth,fDay,fHour,fMinute)
+                        alertFromDate = Date(fYear, fMonth, fDay, fHour, fMinute)
 
                         timePickerDialog.dismiss()
                         datePickerDialog.dismiss()
@@ -162,41 +162,25 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
                 dateCancel.setOnClickListener { datePickerDialog.dismiss() }
 
             }
-            toLinear.setOnClickListener{
+            toLinear.setOnClickListener {
 
-                datePickerDialog = Dialog(requireContext())
-                datePickerDialog.setContentView(R.layout.time_picker)
-                datePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-                var datePicker: DatePicker = datePickerDialog.findViewById(R.id.datePicker)
-                var dateOk: Button = datePickerDialog.findViewById(R.id.dateOk)
-                var dateCancel: Button = datePickerDialog.findViewById(R.id.dateCancel)
-
-                datePickerDialog.show()
+                setUpDatePicker()
 
                 dateOk.setOnClickListener {
-                    var tDay = datePicker.dayOfMonth
-                    var tMonth = datePicker.month
-                    var tYear = datePicker.year
+                    val tDay = datePicker.dayOfMonth
+                    val tMonth = datePicker.month
+                    val tYear = datePicker.year
 
-                    timePickerDialog = Dialog(requireContext())
-                    timePickerDialog.setContentView(R.layout.time_picker)
-                    timePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-                    var timePicker: TimePicker = timePickerDialog.findViewById(R.id.timePicker)
-                    var timeOk: Button = timePickerDialog.findViewById(R.id.timeOk)
-                    var timeCancel: Button = timePickerDialog.findViewById(R.id.timeCancel)
-
-                    timePickerDialog.show()
+                    setUpTimePicker()
 
                     timeOk.setOnClickListener {
-                        var tHour = timePicker.hour
-                        var tMinute = timePicker.minute
+                        val tHour = timePicker.hour
+                        val tMinute = timePicker.minute
 
-                        toDatatxt.text = Converters.getDateFromInt(tDay,tMonth,tYear)
+                        toDatatxt.text = Converters.getDateFromInt(tDay, tMonth, tYear)
                         toTimetxt.text = "$tHour:$tMinute"
 
-                        alertToDate = Date(tYear,tMonth,tDay,tHour,tMinute)
+                        alertToDate = Date(tYear, tMonth, tDay, tHour, tMinute)
 
                         timePickerDialog.dismiss()
                         datePickerDialog.dismiss()
@@ -208,11 +192,11 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
                     }
 
                 }
-                dateCancel.setOnClickListener { datePickerDialog.dismiss()}
+                dateCancel.setOnClickListener { datePickerDialog.dismiss() }
 
             }
             saveBtn.setOnClickListener {
-                if(settings?.notification as Boolean) {
+                if (settings?.notification as Boolean) {
 
                     if (alertFromDate != null && alertToDate != null) {
                         newAlert = AlertData(alertFromDate as Date, alertToDate as Date, notifyType)
@@ -235,8 +219,7 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
                         }
                         alertViewModel.addAlertInVM(newAlert)
                     }
-                }
-                else{
+                } else {
                     val dialogBuilder = AlertDialog.Builder(requireContext())
                     dialogBuilder.setMessage(getString(R.string.sorry))
                         .setCancelable(false)
@@ -252,8 +235,33 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
         }
     }
 
-    fun setupRecycler(){
-        alertAdapter = AlertAdapter(requireContext(), emptyList(),this)
+    private fun setUpTimePicker() {
+        timePickerDialog = Dialog(requireContext())
+        timePickerDialog.setContentView(R.layout.time_picker)
+        timePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        timePicker = timePickerDialog.findViewById(R.id.timePicker)
+        timeOk = timePickerDialog.findViewById(R.id.timeOk)
+        timeCancel = timePickerDialog.findViewById(R.id.timeCancel)
+
+        timePickerDialog.show()
+
+    }
+
+    private fun setUpDatePicker() {
+        datePickerDialog = Dialog(requireContext())
+        datePickerDialog.setContentView(R.layout.alert_date)
+        datePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        datePicker = datePickerDialog.findViewById(R.id.datePicker)
+        dateOk = datePickerDialog.findViewById(R.id.dateOk)
+        dateCancel = datePickerDialog.findViewById(R.id.dateCancel)
+
+        datePickerDialog.show()
+    }
+
+    private fun setupRecycler() {
+        alertAdapter = AlertAdapter(requireContext(), emptyList(), this)
         alertLayoutManager = LinearLayoutManager(requireContext())
         binding.alertRecycler.adapter = alertAdapter
         binding.alertRecycler.layoutManager = alertLayoutManager
@@ -264,19 +272,21 @@ class AlertFragment : Fragment() , OnClickAlertInterface {
             .setInitialDelay(delay, TimeUnit.MILLISECONDS).setInputData(data).build()
 
         val instanceWorkManager = WorkManager.getInstance(requireContext())
-        instanceWorkManager.beginUniqueWork(NOTIFICATION_WORK,
-            ExistingWorkPolicy.APPEND, notificationWork).enqueue()
+        instanceWorkManager.beginUniqueWork(
+            NOTIFICATION_WORK,
+            ExistingWorkPolicy.APPEND, notificationWork
+        ).enqueue()
     }
 
-    override fun onRemoveAlertBtnClick(myAlert: AlertData) {
+    override fun onRemoveAlertBtnClick(alert: AlertData) {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setMessage(getString(R.string.deleteMsg))
             .setCancelable(false)
-            .setPositiveButton(getString(R.string.delete)) { dialog, id ->
-                alertViewModel.removeAlertInVM(myAlert)
+            .setPositiveButton(getString(R.string.delete)) { dialog, _ ->
+                alertViewModel.removeAlertInVM(alert)
                 dialog.cancel()
             }
-            .setNegativeButton(getString(R.string.cancel)){ dialog, id -> dialog.cancel()}
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.cancel() }
         val alert = dialogBuilder.create()
         alert.show()
     }

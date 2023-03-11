@@ -45,25 +45,15 @@ class HomeFragment : Fragment() {
     private var settings: Settings? = null
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding = FragmentHomeBinding.bind(view)
-        viewModelFactory = HomeViewModelFactory(
-            Repository.getInstance(
-                RemoteSource.getInstance(),
-                LocalSource.getInstance(requireActivity()),
-                requireActivity(),
-                requireActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
-            )
-        )
+        viewModelFactory = HomeViewModelFactory(Repository.getInstance(RemoteSource.getInstance(), LocalSource.getInstance(requireActivity()), requireActivity(), requireActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)))
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
         animLoading = view.findViewById(R.id.animationView)
         settings = viewModel.getStoredSettings()
@@ -115,10 +105,9 @@ class HomeFragment : Fragment() {
             hourlyAdapter.notifyDataSetChanged()
             dailyAdapter.notifyDataSetChanged()
         }
-
     }
 
-    fun setupRecyclerViews() {
+    private fun setupRecyclerViews() {
         hourlyAdapter = HourlyWeatherAdapter(context as Context, arrayListOf(), "metric")
         dailyAdapter = DailyWeatherAdapter(context as Context, arrayListOf(), "metric")
         layoutManagerHourly =
@@ -131,7 +120,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    fun applyUIChange(currWeather: WeatherForecast?) {
+    private fun applyUIChange(currWeather: WeatherForecast?) {
         currWeather as WeatherForecast
         animLoading.visibility = View.GONE
         binding.currCity.text = currWeather.timezone

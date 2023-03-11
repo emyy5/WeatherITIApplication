@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.eman.weatherproject.features.settings.view.SettingFragment"
-        android:label="fragment_setting"
+        android:label="@string/settings"
         tools:layout="@layout/fragment_setting" >
         <action
             android:id="@+id/action_settingFragment2_to_mapFragment"
@@ -58,15 +58,17 @@
         tools:layout="@layout/fragment_splach" >
         <action
             android:id="@+id/action_splachFragment_to_initialFragment"
-            app:destination="@id/initialFragment" />
+            app:destination="@id/initialFragment"
+            app:popUpTo="@id/nav_graph" />
         <action
             android:id="@+id/action_splachFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph" />
     </fragment>
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.eman.weatherproject.features.favourities.view.FavouriteFragment"
-        android:label="fragment_favourite"
+        android:label="@string/favorites"
         tools:layout="@layout/fragment_favourite" >
         <action
             android:id="@+id/action_favouriteFragment_to_favouriteDetailsFragment"
@@ -86,11 +88,14 @@
             android:name="address"
             app:argType="string"
             android:defaultValue='"Assuit(default)"' />
+        <action
+            android:id="@+id/action_favouriteFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/favouriteDetailsFragment"
         android:name="com.eman.weatherproject.features.favourities.view.FavouriteDetailsFragment"
-        android:label="fragment_favourite_details"
+        android:label="@string/favourite_details"
         tools:layout="@layout/fragment_favourite_details" />
     <fragment
         android:id="@+id/mapsFragment"
@@ -107,6 +112,6 @@
     <fragment
         android:id="@+id/alertFragment"
         android:name="com.eman.weatherproject.features.alert.view.AlertFragment"
-        android:label="fragment_alert"
+        android:label="@string/alerts"
         tools:layout="@layout/fragment_alert" />
 </navigation>

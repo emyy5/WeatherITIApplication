@@ -24,6 +24,8 @@
             android:background="@drawable/rounded_corners"
             android:backgroundTint="@color/color2"
             app:titleTextColor="@color/white"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:textAlignment="center"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout

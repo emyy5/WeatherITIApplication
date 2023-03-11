@@ -1,6 +1,7 @@
 package com.eman.weatherproject.features.map
 
 import android.content.Context
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import com.eman.weatherproject.MainActivity
 import com.eman.weatherproject.database.room.LocalSource
 import com.eman.weatherproject.R
 import com.eman.weatherproject.RemoteSource
@@ -74,6 +76,7 @@ class MapsFragment : Fragment() {
                     bundle.putFloat("loong",lonIn4Digits.toFloat())
                     bundle.putBoolean("comeForm",true)
                     navController.navigate(R.id.action_mapsFragment_to_homeFragment,bundle)
+
 
                     /*
                     when(fragmentType.nextFragment) {

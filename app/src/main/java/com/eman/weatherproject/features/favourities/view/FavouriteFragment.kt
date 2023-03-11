@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eman.weatherproject.R
 import com.eman.weatherproject.RemoteSource
@@ -41,8 +42,7 @@ private lateinit var binding: FragmentFavouriteBinding
 var connectivity: ConnectivityManager?=null
     var info: NetworkInfo?=null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favourite, container, false)
     }
 
@@ -111,9 +111,8 @@ var connectivity: ConnectivityManager?=null
                 requireContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
             )
         )
-        favouriteViewModel = ViewModelProvider(this, favouriteViewModelFactory).get(
-            FavouriteViewModel::class.java
-        )
+
+        favouriteViewModel = ViewModelProvider(this, favouriteViewModelFactory)[FavouriteViewModel::class.java]
         setupFavRecycler()
         addBtn()
 
